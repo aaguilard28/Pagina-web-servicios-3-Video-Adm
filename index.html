@@ -500,7 +500,7 @@
         /* This container creates the dark, styled box */
         .typewriter-container {
             display: inline-block; /* Crucial to size with the inner content */
-            background-color: #1C1C1C; /* Dark gray background */
+            background-color: #1C1C1E; /* Dark gray background */
             border-radius: 6px; /* Softly rounded corners */
             padding: 8px 24px; /* Thinner, elegant padding */
             box-shadow: 0 6px 24px rgba(0,0,0,.15); /* Subtle shadow for depth */
@@ -679,18 +679,40 @@
         .cta-title-glow {
             text-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 0 40px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.15);
         }
-
-        #cta-highlight-text.animate-text-reveal {
-            /* 149 characters in the text. 5s duration for a comfortable reading speed.
-               'steps(149)' creates the character-by-character typing effect.
-               'infinite alternate' makes the animation loop by typing out and then erasing. */
-            animation: reveal-text 5s steps(149) infinite alternate;
+        
+        /* ====== TELEPROMPTER EFFECT ====== */
+        .tp-container {
+            transition: opacity var(--tp-fade-out, 450ms) ease-in-out;
+            cursor: default;
+        }
+        .tp-container.tp-fading-out {
+            opacity: 0;
+        }
+        .tp-word {
+            opacity: 0;
+            transition: opacity 0.3s ease, color 0.2s ease, font-weight 0.2s ease, text-shadow 0.2s ease;
+            display: inline-block;
+        }
+        .tp-word.tp-visible {
+            opacity: 1;
+        }
+        .tp-word.tp-highlight {
+            color: var(--tp-highlight-color, #0EA5E9);
+            font-weight: var(--tp-highlight-weight, 800);
+            text-shadow: 0 0 8px rgba(14, 165, 233, 0.3); /* Subtle glow for better contrast */
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            /* Statically display the text and disable transitions if user prefers reduced motion */
+            .tp-word {
+                opacity: 1 !important;
+                color: inherit !important;
+                transition: none !important;
+                font-weight: normal !important;
+                text-shadow: none !important;
+            }
         }
 
-        @keyframes reveal-text {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
     </style>
     
     <!-- Gemini API -->
@@ -971,9 +993,8 @@
                 El verdadero riesgo es no evolucionar.
             </h2>
             <div id="cta-card" class="card max-w-4xl mx-auto py-8 sm:py-10 px-6 sm:px-8 shadow-2">
-                <div id="cta-text-container" class="relative text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed">
-                    <span class="text-brand-text-secondary">La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.</span>
-                    <span id="cta-highlight-text" class="absolute top-0 left-0 h-full w-0 overflow-hidden bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.</span>
+                <div class="text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed text-brand-text-secondary h-24 sm:h-20 flex items-center justify-center" aria-live="polite">
+                    <p id="teleprompter-container" class="tp-container"></p>
                 </div>
             </div>
         </div>
@@ -1356,22 +1377,149 @@
         });
       }
 
-      // --- CTA Text Reveal Animation ---
-      const ctaTextContainer = document.getElementById('cta-text-container');
-      const ctaHighlightText = document.getElementById('cta-highlight-text');
+      // --- Teleprompter Effect ---
+      function initTeleprompter() {
+        const container = document.getElementById('teleprompter-container');
+        if (!container) return;
 
-      if (ctaTextContainer && ctaHighlightText) {
-          const ctaObserver = new IntersectionObserver((entries) => {
-              entries.forEach(entry => {
-                  if (entry.isIntersecting) {
-                      ctaHighlightText.classList.add('animate-text-reveal');
-                      ctaObserver.unobserve(entry.target); // Animate only once
-                  }
-              });
-          }, { threshold: 0.8 }); // Trigger when 80% of the container is visible
+        // --- Configurable Parameters ---
+        const config = {
+            text: "La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.",
+            typingSpeed: 380,    // ms between word highlights
+            wordHold: 180,       // ms each word stays highlighted
+            endPause: 2000,      // ms pause at the end of the sentence
+            fadeOut: 450,        // ms for fade out animation
+            postFadeDelay: 2000, // ms pause AFTER fade out before restart
+            highlightColor: '#0EA5E9',
+            highlightWeight: '800'
+        };
 
-          ctaObserver.observe(ctaTextContainer);
+        container.style.setProperty('--tp-fade-out', `${config.fadeOut}ms`);
+        container.style.setProperty('--tp-highlight-color', config.highlightColor);
+        container.style.setProperty('--tp-highlight-weight', config.highlightWeight);
+
+        const words = config.text.split(' ');
+        const fragment = document.createDocumentFragment();
+        words.forEach((word, index) => {
+            const span = document.createElement('span');
+            span.className = 'tp-word';
+            span.textContent = word;
+            fragment.appendChild(span);
+            if (index < words.length - 1) {
+                fragment.appendChild(document.createTextNode(' '));
+            }
+        });
+        container.innerHTML = ''; // Clear previous content
+        container.appendChild(fragment);
+        const wordSpans = Array.from(container.querySelectorAll('.tp-word'));
+
+        // --- Accessibility Check ---
+        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (reducedMotionQuery.matches) {
+            wordSpans.forEach(span => span.classList.add('tp-visible'));
+            return; // Exit if reduced motion is preferred
+        }
+
+        // --- Animation State Machine ---
+        let currentIndex = 0;
+        let currentStep = 'typing';
+        let isPaused = true;
+        let isVisible = false;
+        let animationTimeout;
+
+        function scheduleNextStep(callback, delay) {
+            clearTimeout(animationTimeout);
+            animationTimeout = setTimeout(callback, delay);
+        }
+
+        const resetAnimation = () => {
+            currentIndex = 0;
+            wordSpans.forEach(span => {
+                span.classList.remove('tp-visible', 'tp-highlight');
+            });
+            container.classList.remove('tp-fading-out');
+        };
+
+        function runAnimation() {
+            if (isPaused) return;
+
+            switch (currentStep) {
+                case 'typing':
+                    if (currentIndex >= wordSpans.length) {
+                        currentStep = 'end-pausing';
+                        scheduleNextStep(runAnimation, config.endPause);
+                        return;
+                    }
+                    const currentWord = wordSpans[currentIndex];
+                    currentWord.classList.add('tp-visible', 'tp-highlight');
+                    currentStep = 'holding';
+                    scheduleNextStep(runAnimation, config.wordHold);
+                    break;
+                
+                case 'holding':
+                    if (currentIndex < wordSpans.length) {
+                        wordSpans[currentIndex].classList.remove('tp-highlight');
+                    }
+                    currentIndex++;
+                    currentStep = 'typing';
+                    const delay = Math.max(0, config.typingSpeed - config.wordHold);
+                    scheduleNextStep(runAnimation, delay);
+                    break;
+                
+                case 'end-pausing':
+                    container.classList.add('tp-fading-out');
+                    currentStep = 'fading';
+                    scheduleNextStep(runAnimation, config.fadeOut);
+                    break;
+                
+                case 'fading':
+                    resetAnimation();
+                    currentStep = 'post-fade-pausing';
+                    scheduleNextStep(runAnimation, config.postFadeDelay);
+                    break;
+                
+                case 'post-fade-pausing':
+                    currentStep = 'typing';
+                    runAnimation(); // Restart the loop
+                    break;
+            }
+        }
+
+        const pause = () => {
+            if (!isPaused) {
+                isPaused = true;
+                clearTimeout(animationTimeout);
+            }
+        };
+
+        const resume = () => {
+            if (isPaused && isVisible && !document.hidden && !reducedMotionQuery.matches) {
+                isPaused = false;
+                runAnimation();
+            }
+        };
+
+        // --- Event Listeners and Observers ---
+        container.addEventListener('mouseover', pause);
+        container.addEventListener('mouseout', resume);
+        container.addEventListener('focusin', pause);
+        container.addEventListener('focusout', resume);
+
+        document.addEventListener('visibilitychange', () => {
+            document.hidden ? pause() : resume();
+        });
+
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isVisible = entry.isIntersecting;
+                isVisible ? resume() : pause();
+            });
+        }, { threshold: 0.5 });
+        
+        intersectionObserver.observe(container);
       }
+      
+      initTeleprompter();
     });
     </script>
     <footer class="bg-brand-bg-secondary border-t border-hairline">
