@@ -691,19 +691,18 @@
         .tp-word {
             opacity: 0;
             transform: translateY(8px); /* Add a small slide-up effect */
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.2s ease, font-weight 0.2s ease, text-shadow 0.2s ease;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.2s ease, font-weight 0.2s ease;
             display: inline-block;
         }
         .tp-word.tp-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .tp-word.tp-highlight {
-            color: var(--tp-highlight-color, #0EA5E9);
-            font-weight: var(--tp-highlight-weight, 800);
-            text-shadow: 0 0 8px rgba(14, 165, 233, 0.3); /* Subtle glow for better contrast */
+        .tp-word.tp-active {
+            color: #0EA5E9;
+            font-weight: 800;
         }
-        
+
         @media (prefers-reduced-motion: reduce) {
             /* Statically display the text and disable transitions if user prefers reduced motion */
             .tp-word {
@@ -712,7 +711,6 @@
                 color: inherit !important;
                 transition: none !important;
                 font-weight: normal !important;
-                text-shadow: none !important;
             }
         }
 
@@ -1388,18 +1386,13 @@
         // --- Configurable Parameters ---
         const config = {
             text: "La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.",
-            typingSpeed: 330,    // ms between word highlights
-            wordHold: 150,       // ms each word stays highlighted
+            typingSpeed: 230,    // Adjusted speed for a more natural pace
             endPause: 2000,      // ms pause at the end of the sentence
             fadeOut: 450,        // ms for fade out animation
             postFadeDelay: 2000, // ms pause AFTER fade out before restart
-            highlightColor: '#0EA5E9',
-            highlightWeight: '800'
         };
 
         container.style.setProperty('--tp-fade-out', `${config.fadeOut}ms`);
-        container.style.setProperty('--tp-highlight-color', config.highlightColor);
-        container.style.setProperty('--tp-highlight-weight', config.highlightWeight);
 
         const words = config.text.split(' ');
         const fragment = document.createDocumentFragment();
@@ -1438,7 +1431,7 @@
         const resetAnimation = () => {
             currentIndex = 0;
             wordSpans.forEach(span => {
-                span.classList.remove('tp-visible', 'tp-highlight');
+                span.classList.remove('tp-visible', 'tp-active');
             });
             container.classList.remove('tp-fading-out');
         };
@@ -1448,28 +1441,30 @@
 
             switch (currentStep) {
                 case 'typing':
+                    // If sentence is complete, move to the pause state
                     if (currentIndex >= wordSpans.length) {
                         currentStep = 'end-pausing';
                         scheduleNextStep(runAnimation, config.endPause);
                         return;
                     }
-                    const currentWord = wordSpans[currentIndex];
-                    currentWord.classList.add('tp-visible', 'tp-highlight');
-                    currentStep = 'holding';
-                    scheduleNextStep(runAnimation, config.wordHold);
-                    break;
-                
-                case 'holding':
-                    if (currentIndex < wordSpans.length) {
-                        wordSpans[currentIndex].classList.remove('tp-highlight');
+
+                    // De-highlight the previous word
+                    if (currentIndex > 0) {
+                        wordSpans[currentIndex - 1].classList.remove('tp-active');
                     }
+                    
+                    // Reveal and highlight the current word
+                    wordSpans[currentIndex].classList.add('tp-visible', 'tp-active');
+                    
                     currentIndex++;
-                    currentStep = 'typing';
-                    const delay = Math.max(0, config.typingSpeed - config.wordHold);
-                    scheduleNextStep(runAnimation, delay);
+                    scheduleNextStep(runAnimation, config.typingSpeed);
                     break;
                 
                 case 'end-pausing':
+                    // Pause is over, de-highlight the last word, and start fading out
+                    if (wordSpans.length > 0) {
+                        wordSpans[wordSpans.length - 1].classList.remove('tp-active');
+                    }
                     container.classList.add('tp-fading-out');
                     currentStep = 'fading';
                     scheduleNextStep(runAnimation, config.fadeOut);
@@ -1483,7 +1478,7 @@
                 
                 case 'post-fade-pausing':
                     currentStep = 'typing';
-                    runAnimation(); // Restart the loop
+                    runAnimation(); // Restart the loop immediately
                     break;
             }
         }
