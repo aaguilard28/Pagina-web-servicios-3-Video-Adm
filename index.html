@@ -690,11 +690,13 @@
         }
         .tp-word {
             opacity: 0;
-            transition: opacity 0.3s ease, color 0.2s ease, font-weight 0.2s ease, text-shadow 0.2s ease;
+            transform: translateY(8px); /* Add a small slide-up effect */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.2s ease, font-weight 0.2s ease, text-shadow 0.2s ease;
             display: inline-block;
         }
         .tp-word.tp-visible {
             opacity: 1;
+            transform: translateY(0);
         }
         .tp-word.tp-highlight {
             color: var(--tp-highlight-color, #0EA5E9);
@@ -706,6 +708,7 @@
             /* Statically display the text and disable transitions if user prefers reduced motion */
             .tp-word {
                 opacity: 1 !important;
+                transform: none !important;
                 color: inherit !important;
                 transition: none !important;
                 font-weight: normal !important;
@@ -1385,8 +1388,8 @@
         // --- Configurable Parameters ---
         const config = {
             text: "La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.",
-            typingSpeed: 380,    // ms between word highlights
-            wordHold: 180,       // ms each word stays highlighted
+            typingSpeed: 330,    // ms between word highlights
+            wordHold: 150,       // ms each word stays highlighted
             endPause: 2000,      // ms pause at the end of the sentence
             fadeOut: 450,        // ms for fade out animation
             postFadeDelay: 2000, // ms pause AFTER fade out before restart
