@@ -681,7 +681,10 @@
         }
 
         #cta-highlight-text.animate-text-reveal {
-            animation: reveal-text 3s ease-out forwards;
+            /* 149 characters in the text. 5s duration for a comfortable reading speed.
+               'steps(149)' creates the character-by-character typing effect.
+               'infinite alternate' makes the animation loop by typing out and then erasing. */
+            animation: reveal-text 5s steps(149) infinite alternate;
         }
 
         @keyframes reveal-text {
@@ -970,7 +973,7 @@
             <div id="cta-card" class="card max-w-4xl mx-auto py-8 sm:py-10 px-6 sm:px-8 shadow-2">
                 <div id="cta-text-container" class="relative text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed">
                     <span class="text-brand-text-secondary">La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.</span>
-                    <span id="cta-highlight-text" class="absolute top-0 left-0 h-full w-0 overflow-hidden whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.</span>
+                    <span id="cta-highlight-text" class="absolute top-0 left-0 h-full w-0 overflow-hidden bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.</span>
                 </div>
             </div>
         </div>
