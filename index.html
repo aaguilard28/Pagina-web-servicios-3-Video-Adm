@@ -975,6 +975,15 @@
             <div class="aspect-video">
                 <iframe id="video-iframe" src="" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full rounded-md"></iframe>
             </div>
+            <div class="mt-4 text-right">
+                <a id="youtube-link" href="#" target="_blank" rel="noopener noreferrer" class="button button-ghost py-2 px-4 text-sm">
+                    <span>Ver en YouTube</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
+                    </svg>
+                </a>
+            </div>
             <div id="video-modal-description" class="mt-4 text-brand-text-secondary"></div>
             <div id="ai-summary-container" class="mt-6">
                 <h4 class='font-bold text-brand-text mb-2'>Puntos Clave (Resumen con IA)</h4>
@@ -1174,6 +1183,7 @@
       const modalDescription = document.getElementById('video-modal-description');
       const aiSummaryContainer = document.getElementById('ai-summary-content');
       const aiSummaryWrapper = document.getElementById('ai-summary-container');
+      const youtubeLink = document.getElementById('youtube-link');
 
       function openModal(video) {
         if (!video || !modal) return;
@@ -1182,6 +1192,11 @@
         modalDescription.innerHTML = video.description;
         aiSummaryContainer.innerHTML = '<p class="text-brand-text-secondary animate-pulse">Generando resumen con IA...</p>';
         aiSummaryWrapper.style.display = 'block';
+
+        if (youtubeLink && video.url.includes('youtube.com/embed/')) {
+            const watchUrl = video.url.replace('/embed/', '/watch?v=');
+            youtubeLink.href = watchUrl;
+        }
 
         modal.setAttribute('open', '');
         document.body.style.overflow = 'hidden';
