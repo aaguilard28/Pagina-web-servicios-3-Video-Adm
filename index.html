@@ -393,7 +393,7 @@
 
         /* ===== GX Executive Ticker ===== */
         #gx-ticker{
-          --gx-height: 44px;
+          --gx-height: 54px;
           --gx-gap: 28px;
           --gx-speed: 55s; /* ↑ mayor = más lento */
           --gx-bg: #FFFFFF;
@@ -432,7 +432,7 @@
         }
         #gx-ticker .gx-ticker__item{
           display: inline-flex; align-items: center; gap: 10px;
-          white-space: nowrap; font-weight: 300; font-size: 11px; opacity: .92;
+          white-space: nowrap; font-weight: 300; font-size: 15px; opacity: .92;
           color: #0A2540;
         }
         #gx-ticker .ico{ width: 18px; height: 18px; flex: 0 0 18px; color: #0A2540; }
@@ -449,8 +449,8 @@
 
         /* Responsive & Motion */
         @media (max-width:768px){
-          #gx-ticker{ --gx-height: 40px; --gx-gap: 22px; --gx-speed: 34s; }
-          #gx-ticker .gx-ticker__item{ font-size: 10.5px; }
+          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 34s; }
+          #gx-ticker .gx-ticker__item{ font-size: 13px; }
         }
         @media (prefers-reduced-motion: reduce){
           #gx-ticker .gx-ticker__track{ animation: none !important; }
@@ -470,6 +470,10 @@
         html[data-mode="dark"] #gx-ticker::before,
         html[data-mode="dark"] #gx-ticker::after{
           background: linear-gradient(to right, var(--gx-bg-dark), rgba(0,0,0,0));
+        }
+        html[data-mode="dark"] #gx-ticker .gx-ticker__item,
+        html[data-mode="dark"] #gx-ticker .ico {
+            color: var(--text);
         }
 
         /* ====== PRELOADER ====== */
@@ -680,6 +684,12 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 0 40px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.15);
         }
         
+        /* Subtle 'Apple-style' gradient for CTA section in Dark Mode */
+        :root[data-mode="dark"] #contacto {
+            --primary: #4A69A5; /* A more muted, elegant blue */
+            --primary-weak: #2C3A5C; /* A deeper, subtler navy */
+        }
+
         /* ====== TELEPROMPTER EFFECT ====== */
         .tp-container {
             transition: opacity var(--tp-fade-out, 450ms) ease-in-out;
@@ -827,7 +837,7 @@
                       </p>
                       <ul class="mt-4 space-y-3 text-brand-text-secondary text-base">
                           <li class="flex items-start">
-                              <svg class="flex-shrink-0 h-6 w-6 text-brand-primary mr-3 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                              <svg class="flex-shrink-0 h-6 w-6 text-brand-primary mr-3 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
                               <span><strong class="font-semibold text-brand-primary">Procesos fragmentados</strong> que generan ineficiencia y costos ocultos.</span>
                           </li>
                           <li class="flex items-start">
@@ -1523,11 +1533,7 @@
     <footer class="bg-brand-bg-secondary border-t border-hairline">
       <div class="container mx-auto px-6 py-8">
         <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-          <p class="text-brand-text-secondary text-sm">&copy; 2024 InnovateNow Consulting. Todos los derechos reservados.</p>
-          <div class="flex mt-4 md:mt-0 space-x-6">
-            <a href="#" class="text-sm text-brand-text-secondary hover:text-brand-primary transition-colors">Política de Privacidad</a>
-            <a href="#" class="text-sm text-brand-text-secondary hover:text-brand-primary transition-colors">Términos de Servicio</a>
-          </div>
+          
         </div>
       </div>
     </footer>
