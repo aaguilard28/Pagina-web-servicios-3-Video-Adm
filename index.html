@@ -690,7 +690,7 @@
             --primary-weak: #2C3A5C; /* A deeper, subtler navy */
         }
 
-        /* ====== TELEPROMPTER EFFECT ====== */
+        /* ====== TELEPROMPTER EFFECT (SMOOTHER) ====== */
         .tp-container {
             transition: opacity var(--tp-fade-out, 450ms) ease-in-out;
             cursor: default;
@@ -699,18 +699,28 @@
             opacity: 0;
         }
         .tp-word {
-            opacity: 0;
-            transform: translateY(8px); /* Add a small slide-up effect */
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.2s ease, font-weight 0.2s ease;
+            opacity: 0.4;
+            transform: translateY(2px);
+            transition: opacity 0.4s ease-out, color 0.4s ease-out, transform 0.4s ease-out;
             display: inline-block;
         }
-        .tp-word.tp-visible {
+        .tp-word.tp-current {
             opacity: 1;
+            /* The 'color' is now handled by the theme-specific rules below for better contrast */
+            transform: translateY(0) scale(1.02);
+        }
+        .tp-word.tp-passed {
+            opacity: 1;
+            color: var(--primary); /* The final blue color for passed words */
             transform: translateY(0);
         }
-        .tp-word.tp-active {
-            color: #0EA5E9;
-            font-weight: 800;
+
+        /* Specific, high-contrast color for the active word in the teleprompter */
+        :root[data-mode="light"] .tp-word.tp-current {
+            color: #007AFF; /* Brighter, more vibrant blue for better contrast */
+        }
+        :root[data-mode="dark"] .tp-word.tp-current {
+            color: #bfdbfe; /* Lighter, more noticeable blue for dark mode */
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1422,7 +1432,6 @@
         // --- Accessibility Check ---
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (reducedMotionQuery.matches) {
-            wordSpans.forEach(span => span.classList.add('tp-visible'));
             return; // Exit if reduced motion is preferred
         }
 
@@ -1441,7 +1450,8 @@
         const resetAnimation = () => {
             currentIndex = 0;
             wordSpans.forEach(span => {
-                span.classList.remove('tp-visible', 'tp-active');
+                // Remove all animation-related classes
+                span.classList.remove('tp-current', 'tp-passed');
             });
             container.classList.remove('tp-fading-out');
         };
@@ -1453,35 +1463,40 @@
                 case 'typing':
                     // If sentence is complete, move to the pause state
                     if (currentIndex >= wordSpans.length) {
+                        // Before pausing, ensure the final word is in the 'passed' state
+                        if (wordSpans.length > 0) {
+                            const lastWord = wordSpans[wordSpans.length - 1];
+                            lastWord.classList.remove('tp-current');
+                            lastWord.classList.add('tp-passed');
+                        }
                         currentStep = 'end-pausing';
                         scheduleNextStep(runAnimation, config.endPause);
                         return;
                     }
 
-                    // De-highlight the previous word
+                    // Set previous word to 'passed' state
                     if (currentIndex > 0) {
-                        wordSpans[currentIndex - 1].classList.remove('tp-active');
+                        const previousWord = wordSpans[currentIndex - 1];
+                        previousWord.classList.remove('tp-current');
+                        previousWord.classList.add('tp-passed');
                     }
-                    
-                    // Reveal and highlight the current word
-                    wordSpans[currentIndex].classList.add('tp-visible', 'tp-active');
+
+                    // Highlight the current word
+                    wordSpans[currentIndex].classList.add('tp-current');
                     
                     currentIndex++;
                     scheduleNextStep(runAnimation, config.typingSpeed);
                     break;
                 
                 case 'end-pausing':
-                    // Pause is over, de-highlight the last word, and start fading out
-                    if (wordSpans.length > 0) {
-                        wordSpans[wordSpans.length - 1].classList.remove('tp-active');
-                    }
+                    // Pause is over, sentence remains fully highlighted. Start fading out.
                     container.classList.add('tp-fading-out');
                     currentStep = 'fading';
                     scheduleNextStep(runAnimation, config.fadeOut);
                     break;
                 
                 case 'fading':
-                    resetAnimation();
+                    resetAnimation(); // All words are de-highlighted here for the next cycle.
                     currentStep = 'post-fade-pausing';
                     scheduleNextStep(runAnimation, config.postFadeDelay);
                     break;
