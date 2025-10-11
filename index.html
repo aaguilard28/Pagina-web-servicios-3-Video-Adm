@@ -1052,7 +1052,7 @@
       </section>
 
       <!-- CTA Section -->
-      <section id="contacto" class="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-primary to-brand-primary-darker py-20 sm:py-28 relative overflow-hidden">
+      <section id="contacto" class="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-primary to-brand-primary-darker py-16 sm:py-20 relative overflow-hidden">
         <div class="relative z-10 container mx-auto px-6 text-center">
             <div class="relative mb-12 md:mb-16">
                 <h2 class="absolute inset-0 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white opacity-40 filter blur-lg pointer-events-none" aria-hidden="true">
@@ -1454,34 +1454,47 @@
 
         // --- Configurable Parameters ---
         const config = {
-            text: "La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.",
-            typingSpeed: 230,    // Adjusted speed for a more natural pace
-            endPause: 2000,      // ms pause at the end of the sentence
-            fadeOut: 450,        // ms for fade out animation
-            postFadeDelay: 2000, // ms pause AFTER fade out before restart
+            texts: [
+                "La transformación digital no es solo adoptar tecnología: es gobernar el cambio, elevar la visión y trascender como referente en tu sector.",
+                "Convertimos datos en decisiones, procesos en ventajas competitivas y la visión en una realidad rentable.",
+                "El liderazgo digital no se improvisa: se construye con estrategia clara, ejecución impecable y gobierno corporativo sólido.",
+                "Donde otros ven complejidad, nosotros diseñamos claridad: orquestamos su ecosistema digital para un rendimiento sin precedentes.",
+                "Aceleramos el futuro de su negocio, no solo actualizando sistemas, sino redefiniendo lo que es posible en su industria."
+            ],
+            typingSpeed: 300,
+            endPause: 500,
+            fadeOut: 450,
+            postFadeDelay: 2000, // Wait 2 seconds before starting the next phrase
         };
 
         container.style.setProperty('--tp-fade-out', `${config.fadeOut}ms`);
 
-        const words = config.text.split(' ');
-        const fragment = document.createDocumentFragment();
-        words.forEach((word, index) => {
-            const span = document.createElement('span');
-            span.className = 'tp-word';
-            span.textContent = word;
-            fragment.appendChild(span);
-            if (index < words.length - 1) {
-                fragment.appendChild(document.createTextNode(' '));
-            }
-        });
-        container.innerHTML = ''; // Clear previous content
-        container.appendChild(fragment);
-        const wordSpans = Array.from(container.querySelectorAll('.tp-word'));
+        let wordSpans = [];
+        let currentPhraseIndex = 0;
+
+        function setupPhrase(text) {
+            const words = text.split(' ');
+            const fragment = document.createDocumentFragment();
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.className = 'tp-word';
+                span.textContent = word;
+                fragment.appendChild(span);
+                if (index < words.length - 1) {
+                    fragment.appendChild(document.createTextNode(' '));
+                }
+            });
+            container.innerHTML = ''; // Clear previous content
+            container.appendChild(fragment);
+            wordSpans = Array.from(container.querySelectorAll('.tp-word'));
+        }
 
         // --- Accessibility Check ---
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (reducedMotionQuery.matches) {
-            return; // Exit if reduced motion is preferred
+            // Statically display the first phrase if reduced motion is preferred
+            setupPhrase(config.texts[0]);
+            return; 
         }
 
         // --- Animation State Machine ---
@@ -1496,12 +1509,13 @@
             animationTimeout = setTimeout(callback, delay);
         }
 
-        const resetAnimation = () => {
+        const resetAnimationState = () => {
             currentIndex = 0;
-            wordSpans.forEach(span => {
-                // Remove all animation-related classes
-                span.classList.remove('tp-current', 'tp-passed');
-            });
+            if(wordSpans.length > 0) {
+                wordSpans.forEach(span => {
+                    span.classList.remove('tp-current', 'tp-passed');
+                });
+            }
             container.classList.remove('tp-fading-out');
         };
 
@@ -1510,9 +1524,7 @@
 
             switch (currentStep) {
                 case 'typing':
-                    // If sentence is complete, move to the pause state
                     if (currentIndex >= wordSpans.length) {
-                        // Before pausing, ensure the final word is in the 'passed' state
                         if (wordSpans.length > 0) {
                             const lastWord = wordSpans[wordSpans.length - 1];
                             lastWord.classList.remove('tp-current');
@@ -1523,14 +1535,12 @@
                         return;
                     }
 
-                    // Set previous word to 'passed' state
                     if (currentIndex > 0) {
                         const previousWord = wordSpans[currentIndex - 1];
                         previousWord.classList.remove('tp-current');
                         previousWord.classList.add('tp-passed');
                     }
 
-                    // Highlight the current word
                     wordSpans[currentIndex].classList.add('tp-current');
                     
                     currentIndex++;
@@ -1538,21 +1548,22 @@
                     break;
                 
                 case 'end-pausing':
-                    // Pause is over, sentence remains fully highlighted. Start fading out.
                     container.classList.add('tp-fading-out');
                     currentStep = 'fading';
                     scheduleNextStep(runAnimation, config.fadeOut);
                     break;
                 
                 case 'fading':
-                    resetAnimation(); // All words are de-highlighted here for the next cycle.
+                    resetAnimationState();
                     currentStep = 'post-fade-pausing';
                     scheduleNextStep(runAnimation, config.postFadeDelay);
                     break;
                 
                 case 'post-fade-pausing':
+                    currentPhraseIndex = (currentPhraseIndex + 1) % config.texts.length;
+                    setupPhrase(config.texts[currentPhraseIndex]);
                     currentStep = 'typing';
-                    runAnimation(); // Restart the loop immediately
+                    runAnimation(); // Restart the loop immediately with the new phrase
                     break;
             }
         }
@@ -1589,6 +1600,9 @@
         }, { threshold: 0.5 });
         
         intersectionObserver.observe(container);
+        
+        // Initial setup
+        setupPhrase(config.texts[currentPhraseIndex]);
       }
       
       initTeleprompter();
