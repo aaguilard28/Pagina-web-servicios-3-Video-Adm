@@ -1116,17 +1116,38 @@
     <div id="modal-backdrop" class="modal-backdrop"></div>
     
     <script type="module">
-    import { GoogleGenAI, Type } from "@google/genai";
-
     document.addEventListener('DOMContentLoaded', () => {
       // --- AI Initialization ---
-      let ai;
-      try {
-        ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      } catch (error) {
-        console.error("API Key for Gemini is not configured. AI features will be disabled.", error);
-        ai = null;
-      }
+      let ai = null;
+
+      const resolveApiKey = () => {
+        if (typeof window !== 'undefined' && window.ENV && window.ENV.GENAI_API_KEY) {
+            return window.ENV.GENAI_API_KEY;
+        }
+        if (typeof process !== 'undefined' && process?.env?.API_KEY) {
+            return process.env.API_KEY;
+        }
+        return '';
+      };
+
+      const initializeAi = async () => {
+        const apiKey = resolveApiKey();
+        if (!apiKey) {
+            console.info('No se encontró la clave de la API de Gemini. Los resúmenes con IA permanecerán deshabilitados.');
+            return;
+        }
+
+        try {
+            const module = await import('https://esm.run/@google/genai?bundle');
+            const { GoogleGenAI } = module;
+            ai = new GoogleGenAI({ apiKey });
+        } catch (error) {
+            console.info('No se pudo cargar el SDK de Gemini. Las funciones de IA permanecerán deshabilitadas.', error);
+            ai = null;
+        }
+      };
+
+      initializeAi();
       
       // --- Preloader Logic ---
       const preloader = document.getElementById('preloader');
@@ -1143,6 +1164,7 @@
           {
             id: 1,
             url: 'https://www.youtube.com/embed/cex78KRJ3Po',
+            shareUrl: 'https://youtu.be/cex78KRJ3Po',
             title: 'Optimización Administrativa y Financiera',
             benefit: 'Convierta la incertidumbre financiera en control absoluto. Automatice cierres, optimice su flujo de efectivo y tome decisiones con total visibilidad.',
             summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',
@@ -1315,9 +1337,15 @@
         aiSummaryContainer.innerHTML = '<p class="text-brand-text-secondary animate-pulse">Generando resumen con IA...</p>';
         aiSummaryWrapper.style.display = 'block';
 
-        if (youtubeLink && video.url.includes('youtube.com/embed/')) {
-            const watchUrl = video.url.replace('/embed/', '/watch?v=');
-            youtubeLink.href = watchUrl;
+        if (youtubeLink) {
+            if (video.shareUrl) {
+                youtubeLink.href = video.shareUrl;
+            } else if (video.url.includes('youtube.com/embed/')) {
+                const watchUrl = video.url.replace('/embed/', '/watch?v=');
+                youtubeLink.href = watchUrl;
+            } else {
+                youtubeLink.href = video.url;
+            }
         }
 
         modal.setAttribute('open', '');
