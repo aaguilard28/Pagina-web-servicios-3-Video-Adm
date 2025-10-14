@@ -1143,6 +1143,7 @@
           {
             id: 1,
             url: 'https://www.youtube.com/embed/cex78KRJ3Po',
+            shareUrl: 'https://youtu.be/cex78KRJ3Po',
             title: 'Optimización Administrativa y Financiera',
             benefit: 'Convierta la incertidumbre financiera en control absoluto. Automatice cierres, optimice su flujo de efectivo y tome decisiones con total visibilidad.',
             summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',
@@ -1315,9 +1316,15 @@
         aiSummaryContainer.innerHTML = '<p class="text-brand-text-secondary animate-pulse">Generando resumen con IA...</p>';
         aiSummaryWrapper.style.display = 'block';
 
-        if (youtubeLink && video.url.includes('youtube.com/embed/')) {
-            const watchUrl = video.url.replace('/embed/', '/watch?v=');
-            youtubeLink.href = watchUrl;
+        if (youtubeLink) {
+            if (video.shareUrl) {
+                youtubeLink.href = video.shareUrl;
+            } else if (video.url.includes('youtube.com/embed/')) {
+                const watchUrl = video.url.replace('/embed/', '/watch?v=');
+                youtubeLink.href = watchUrl;
+            } else {
+                youtubeLink.href = video.url;
+            }
         }
 
         modal.setAttribute('open', '');
