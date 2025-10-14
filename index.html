@@ -490,10 +490,13 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.8s var(--ease-apple), visibility 0.8s var(--ease-apple);
+            animation: preloader-failsafe 0s forwards ease-in;
+            animation-delay: 2.5s;
         }
         .preloader.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
         .preloader-content {
             text-align: center;
@@ -502,6 +505,14 @@
         @keyframes pulse-text {
             0%, 100% { opacity: 0.8; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        @keyframes preloader-failsafe {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
         }
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
@@ -1011,19 +1022,6 @@
               <div class="mt-4 w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
             </div>
             <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
-              <p class="mt-4 text-lg text-brand-text-secondary max-w-2xl mx-auto">Descubre cómo lideramos la modernización corporativa con procesos estructurados y transversales.</p>
-              <div class="mt-4 w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
-            </div>
-            <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
-        <div class="container mx-auto px-6">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-brand-text">Descubre en video cómo lideramos la transformación corporativa de forma estructurada y transversal</h2>
-            <p class="mt-4 text-lg text-brand-text-secondary max-w-2xl mx-auto">Descubre cómo lideramos la modernización corporativa con procesos estructurados y transversales.</p>
-            <h2 class="text-3xl md:text-4xl font-bold text-brand-text">Descubre en video nuestra estrategia de transformación corporativa</h2>
-            <p class="mt-4 text-lg text-brand-text-secondary max-w-2xl mx-auto">Descubra cómo lideramos la modernización corporativa de forma estructurada y transversal.</p>
-            <div class="mt-4 w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
-          </div>
-          <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
             <!-- Video cards will be injected here by JS -->
           </div>
         </div>
@@ -1187,47 +1185,6 @@
       };
 
       initializeAi();
-
-      const cleanupDuplicatePhrases = () => {
-        const serviciosSection = document.getElementById('servicios');
-        if (!serviciosSection) return;
-
-        const phrasesToRemove = [
-            'Descubre cómo lideramos la modernización corporativa con procesos estructurados y transversales.',
-            'Descubre en video nuestra estrategia de transformación corporativa',
-            'Descubra cómo lideramos la modernización corporativa de forma estructurada y transversal.',
-            'Descubre en video cómo lideramos la transformación corporativa de forma estructurada y transversal'
-            'Descubra cómo lideramos la modernización corporativa de forma estructurada y transversal.'
-        ];
-
-        if (typeof NodeFilter === 'undefined') return;
-
-        const walker = document.createTreeWalker(
-            serviciosSection,
-            NodeFilter.SHOW_TEXT
-        );
-
-        const nodesToRemove = [];
-
-        while (walker.nextNode()) {
-            const currentNode = walker.currentNode;
-            const textValue = currentNode.textContent ? currentNode.textContent.trim() : '';
-
-            if (!textValue || !phrasesToRemove.includes(textValue)) continue;
-
-            const parentElement = currentNode.parentElement;
-
-            if (parentElement && parentElement.childNodes.length === 1 && parentElement.textContent.trim() === textValue) {
-                nodesToRemove.push(parentElement);
-            } else {
-                nodesToRemove.push(currentNode);
-            }
-        }
-
-        nodesToRemove.forEach(node => node.remove());
-      };
-
-      cleanupDuplicatePhrases();
 
       // --- Preloader Logic ---
       const preloader = document.getElementById('preloader');
