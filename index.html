@@ -683,66 +683,63 @@
         }
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
-        /* This container creates the dark, styled box */
         .typewriter-container {
-            display: inline-block; /* Crucial to size with the inner content */
-            background-color: #1C1C1E; /* Dark gray background */
-            border-radius: 6px; /* Softly rounded corners */
-            padding: 8px 24px; /* Thinner, elegant padding */
-            box-shadow: 0 6px 24px rgba(0,0,0,.15); /* Subtle shadow for depth */
-            cursor: default; /* Interactive feel */
-            transition: box-shadow var(--dur-base) var(--ease-apple);
+          display: inline-block;
+          background-color: #1C1C1E;
+          border-radius: 6px;
+          padding: 8px 24px;
+          box-shadow: 0 6px 24px rgba(0,0,0,.15);
+          cursor: default;
+          transition: box-shadow 0.3s ease-in-out;
         }
-        
+
         .typewriter-container:hover {
-            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+          box-shadow: 0 10px 30px rgba(0,0,0,.2);
         }
 
-        /* The text element itself, now with specific styling for inside the box */
         .typewriter-text {
-            color: #FFFFFF; /* White text */
-            font-size: 1.25rem; /* text-xl equivalent */
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            line-height: 1.5;
-            /* Default direction is LTR, so no 'direction' property needed */
+          color: #FFFFFF;
+          font-size: 1.25rem;
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+            "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+          line-height: 1.5;
         }
 
-        /* The span is the core of the animation, it gets its width animated */
         .typewriter-text span {
-            display: inline-block; /* Needed for width animation to work */
-            overflow: hidden; /* Hides the text outside of the current width */
-            white-space: nowrap; /* Prevents the text from wrapping */
-            vertical-align: bottom;
-            
-            /* The caret is on the RIGHT for LTR typing */
-            border-right: .1em solid #FFFFFF;
-            
-            /* Animation for typing/erasing width + caret blinking */
-            animation: 
-                typing-ltr 8s steps(72) infinite, 
-                blink-caret-ltr .75s step-end infinite;
+          display: inline-block;
+          overflow: hidden;
+          white-space: nowrap;
+          vertical-align: bottom;
+          border-right: 0.1em solid #FFFFFF;
+          animation:
+            typing-ltr 8s steps(105) infinite,
+            blink-caret-ltr 0.75s step-end infinite;
         }
 
-        /* Pause the animation on hover of the container */
+        /* Pause animation on hover */
         .typewriter-container:hover .typewriter-text span {
-            animation-play-state: paused;
+          animation-play-state: paused;
         }
 
-        /* Keyframes to animate the width from 0 to 100% and back (LTR) */
+        /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
-            0%, 100% {
-                width: 0;
-            }
-            50%, 75% {
-                /* Hold the full text for 25% of the duration */
-                width: 100%;
-            }
+          0%, 100% {
+            width: 0;
+          }
+          50%, 75% {
+            width: 100%;
+          }
         }
 
-        /* Keyframes for the caret blinking on the right side */
+        /* Caret blinking */
         @keyframes blink-caret-ltr {
-            from, to { border-right-color: transparent; }
-            50% { border-right-color: #FFFFFF; }
+          from, to {
+            border-color: transparent;
+          }
+          50% {
+            border-color: #FFFFFF;
+          }
         }
 
         /* ====== GENERAL ANIMATIONS & UTILITIES ====== */
@@ -1214,10 +1211,14 @@
               <span class="text-brand-primary">con la transformación digital</span>
             </h2>
 
-            <!-- Premium Description -->
-            <p class="text-center text-lg md:text-xl text-slate-600 leading-relaxed max-w-4xl mx-auto">
-              Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.
-            </p>
+            <!-- Premium Description with Typewriter Effect -->
+            <div class="mt-10 flex justify-center">
+              <div class="typewriter-container">
+                <p id="ai-subtitle" class="typewriter-text">
+                  <span>Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.</span>
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Elite Pillars Grid - Structured Layout -->
