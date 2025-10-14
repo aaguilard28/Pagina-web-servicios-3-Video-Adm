@@ -1181,7 +1181,46 @@
       };
 
       initializeAi();
-      
+
+      const cleanupDuplicatePhrases = () => {
+        const serviciosSection = document.getElementById('servicios');
+        if (!serviciosSection) return;
+
+        const phrasesToRemove = [
+            'Descubre cómo lideramos la modernización corporativa con procesos estructurados y transversales.',
+            'Descubre en video nuestra estrategia de transformación corporativa',
+            'Descubra cómo lideramos la modernización corporativa de forma estructurada y transversal.'
+        ];
+
+        if (typeof NodeFilter === 'undefined') return;
+
+        const walker = document.createTreeWalker(
+            serviciosSection,
+            NodeFilter.SHOW_TEXT
+        );
+
+        const nodesToRemove = [];
+
+        while (walker.nextNode()) {
+            const currentNode = walker.currentNode;
+            const textValue = currentNode.textContent ? currentNode.textContent.trim() : '';
+
+            if (!textValue || !phrasesToRemove.includes(textValue)) continue;
+
+            const parentElement = currentNode.parentElement;
+
+            if (parentElement && parentElement.childNodes.length === 1 && parentElement.textContent.trim() === textValue) {
+                nodesToRemove.push(parentElement);
+            } else {
+                nodesToRemove.push(currentNode);
+            }
+        }
+
+        nodesToRemove.forEach(node => node.remove());
+      };
+
+      cleanupDuplicatePhrases();
+
       // --- Preloader Logic ---
       const preloader = document.getElementById('preloader');
       if (preloader) {
