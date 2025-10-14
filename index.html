@@ -490,10 +490,13 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.8s var(--ease-apple), visibility 0.8s var(--ease-apple);
+            animation: preloader-failsafe 0s forwards ease-in;
+            animation-delay: 2.5s;
         }
         .preloader.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
         .preloader-content {
             text-align: center;
@@ -502,6 +505,14 @@
         @keyframes pulse-text {
             0%, 100% { opacity: 0.8; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        @keyframes preloader-failsafe {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
         }
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
@@ -799,6 +810,12 @@
       </div>
     </div>
 
+    <noscript>
+      <style>
+        .preloader { display: none !important; }
+      </style>
+    </noscript>
+
     <header class="sticky top-0 z-40 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
       <div class="container mx-auto px-6 py-4 flex justify-between items-center">
         <a href="#" class="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
@@ -884,16 +901,12 @@
           <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl md:text-5xl font-extrabold text-center tracking-tight leading-tight">
               <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">
-                Consultoría Integral que impulsa la Transformación del Negocio, donde la Tecnología es solo el comienzo
+                Consultoría Integral: donde la Tecnología es solo el comienzo
               </span>
             </h1>
-            <div class="mt-8 flex justify-center">
-                <div class="typewriter-container">
-                    <p id="ai-subtitle" class="typewriter-text">
-                        <span>Alineamos estrategia, procesos y tecnología para liderar el futuro digital</span>
-                    </p>
-                </div>
-            </div>
+            <p class="mt-6 text-xl md:text-2xl text-brand-text-secondary">
+              Reestructuración, Normalización y Estandarización de procesos, de forma transversal, en todos los sectores del negocio
+            </p>
           </div>
           
           <div class="max-w-6xl mx-auto text-left grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 fade-in-section stagger-children">
@@ -1001,13 +1014,14 @@
 
       <!-- Services Section -->
       <section id="servicios" class="py-20 bg-brand-bg/50 fade-in-section">
-        <div class="container mx-auto px-6">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-brand-text">Conozca en video nuestra estrategia de transformación digital</h2>
-            <p class="mt-4 text-lg text-brand-text-secondary max-w-2xl mx-auto">Descubra cómo lideramos la modernización corporativa de forma estructurada y transversal.</p>
-            <div class="mt-4 w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
-          </div>
-          <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
+          <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold text-brand-text">
+                Descubre en video cómo lideramos la transformación corporativa de forma estructurada y transversal
+              </h2>
+              <div class="mt-4 w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
+            </div>
+            <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
             <!-- Video cards will be injected here by JS -->
           </div>
         </div>
@@ -1139,7 +1153,7 @@
     <div id="modal-backdrop" class="modal-backdrop"></div>
     
     <script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
+    const runApp = () => {
       // --- AI Initialization ---
       let ai = null;
 
@@ -1171,15 +1185,22 @@
       };
 
       initializeAi();
-      
+
       // --- Preloader Logic ---
       const preloader = document.getElementById('preloader');
+      const hidePreloader = () => {
+        if (preloader && !preloader.classList.contains('hidden')) {
+          preloader.classList.add('hidden');
+        }
+      };
+
       if (preloader) {
         window.addEventListener('load', () => {
-          setTimeout(() => {
-            preloader.classList.add('hidden');
-          }, 500); // Small delay to ensure content is ready
+          setTimeout(hidePreloader, 500); // Small delay to ensure content is ready
         });
+
+        // Fallback in case the load event is delayed or blocked
+        setTimeout(hidePreloader, 2000);
       }
       
       // --- DATA ---
@@ -1688,7 +1709,14 @@
       }
       
       initTeleprompter();
-    });
+      hidePreloader();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runApp);
+    } else {
+      runApp();
+    }
     </script>
     <footer class="bg-brand-bg-secondary border-t border-hairline">
       <div class="container mx-auto px-6 py-8">
