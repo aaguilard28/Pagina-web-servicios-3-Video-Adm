@@ -235,7 +235,174 @@
             color: white;
             transform: scale(1.1);
         }
-        
+
+        /* ====== STRATEGIC PILLARS (ELITE EXPERIENCE) ====== */
+        .pillar-card {
+          position: relative;
+          border-radius: 28px;
+          padding: clamp(28px, 4vw, 40px);
+          background: linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(245, 245, 247, 0.85));
+          border: 1px solid rgba(10, 37, 64, 0.1);
+          box-shadow: 0 24px 48px rgba(10, 37, 64, 0.08);
+          backdrop-filter: blur(6px);
+          overflow: hidden;
+          transition: transform var(--dur-base) var(--ease-apple),
+                      box-shadow var(--dur-base) var(--ease-apple),
+                      border-color var(--dur-base) var(--ease-apple);
+        }
+
+        .pillar-card::before,
+        .pillar-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity var(--dur-base) var(--ease-apple),
+                      transform var(--dur-base) var(--ease-apple);
+        }
+
+        .pillar-card::before {
+          background: linear-gradient(150deg, rgba(99, 133, 255, 0.12), transparent 60%);
+        }
+
+        .pillar-card::after {
+          inset-inline: -20%;
+          top: -65%;
+          height: 120%;
+          background: radial-gradient(circle at top, rgba(10, 37, 64, 0.18), transparent 60%);
+          transform: translateY(16px);
+        }
+
+        .pillar-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(10, 37, 64, 0.22);
+          box-shadow: 0 32px 64px rgba(10, 37, 64, 0.14);
+        }
+
+        .pillar-card:hover::before,
+        .pillar-card:hover::after {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        [data-mode="dark"] .pillar-card {
+          background: linear-gradient(150deg, rgba(15, 17, 21, 0.88), rgba(25, 28, 35, 0.9));
+          border-color: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+        }
+
+        [data-mode="dark"] .pillar-card::before {
+          background: linear-gradient(150deg, rgba(99, 133, 255, 0.28), transparent 60%);
+        }
+
+        [data-mode="dark"] .pillar-card::after {
+          background: radial-gradient(circle at top, rgba(99, 133, 255, 0.2), transparent 60%);
+        }
+
+        [data-mode="dark"] .pillar-card:hover {
+          border-color: rgba(99, 133, 255, 0.4);
+        }
+
+        .pillar-number {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 72px;
+          height: 72px;
+          border-radius: 9999px;
+          background: linear-gradient(135deg, #0A2540, #3B5D8F);
+          color: #fff;
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          border: 1px solid rgba(255, 255, 255, 0.45);
+          box-shadow: 0 16px 36px rgba(10, 37, 64, 0.25);
+          transition: transform var(--dur-base) var(--ease-apple);
+        }
+
+        .pillar-card:hover .pillar-number {
+          transform: translateY(-4px) scale(1.04);
+        }
+
+        [data-mode="dark"] .pillar-number {
+          background: linear-gradient(135deg, #6385FF, #3157A3);
+          border-color: rgba(99, 133, 255, 0.55);
+          box-shadow: 0 16px 36px rgba(99, 133, 255, 0.35);
+        }
+
+        .pillar-subgrid {
+          display: grid;
+          gap: 18px;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .pillar-feature {
+          position: relative;
+          border-radius: 18px;
+          padding: 22px;
+          background: rgba(255, 255, 255, 0.74);
+          border: 1px solid rgba(10, 37, 64, 0.1);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          transition: border-color var(--dur-base) var(--ease-apple),
+                      box-shadow var(--dur-base) var(--ease-apple),
+                      transform var(--dur-base) var(--ease-apple);
+        }
+
+        .pillar-feature:hover {
+          border-color: rgba(10, 37, 64, 0.28);
+          box-shadow: 0 18px 32px rgba(10, 37, 64, 0.14);
+          transform: translateY(-4px);
+        }
+
+        .pillar-feature.numbered::before {
+          content: attr(data-label);
+          position: absolute;
+          top: 18px;
+          right: 22px;
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.26em;
+          text-transform: uppercase;
+          color: rgba(10, 37, 64, 0.35);
+          transition: color var(--dur-base) var(--ease-apple);
+        }
+
+        .pillar-feature.numbered:hover::before {
+          color: rgba(10, 37, 64, 0.75);
+        }
+
+        [data-mode="dark"] .pillar-feature {
+          background: rgba(20, 23, 31, 0.85);
+          border-color: rgba(99, 133, 255, 0.16);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        [data-mode="dark"] .pillar-feature:hover {
+          border-color: rgba(99, 133, 255, 0.42);
+          box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
+        }
+
+        [data-mode="dark"] .pillar-feature.numbered::before {
+          color: rgba(99, 133, 255, 0.45);
+        }
+
+        [data-mode="dark"] .pillar-feature.numbered:hover::before {
+          color: rgba(157, 180, 255, 0.9);
+        }
+
+        @media (max-width: 640px) {
+          .pillar-number {
+            width: 60px;
+            height: 60px;
+            font-size: 1.3rem;
+          }
+
+          .pillar-card {
+            padding: 24px;
+          }
+        }
+
         /* ====== VIDEO TILE SYSTEM ====== */
         .video-tile{
           position:relative; 
@@ -1017,35 +1184,38 @@
       </section>
 
       <!-- Strategic Pillars Section -->
-      <section id="pilares-estrategicos" class="relative py-20">
-        <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(13,51,88,0.15),_transparent_55%)]"></div>
+      <section id="pilares-estrategicos" class="relative overflow-hidden py-24">
+        <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(13,51,88,0.18),_transparent_55%)]"></div>
+        <div class="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/10"></div>
         <div class="container mx-auto px-6">
-          <div class="max-w-3xl mx-auto text-center">
+          <div class="max-w-4xl mx-auto text-center">
             <p class="uppercase tracking-[0.3em] text-xs md:text-sm font-semibold text-brand-text-secondary">Nuestro acompañamiento</p>
             <h2 class="mt-4 text-3xl md:text-4xl font-bold text-brand-text">
               Pilares que alinean la consultoría integral con la transformación digital
             </h2>
-            <p class="mt-4 text-lg text-brand-text-secondary">
+            <p class="mt-5 text-lg text-brand-text-secondary">
               Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.
             </p>
           </div>
-          <div class="mt-16 space-y-14">
-            <article class="card">
-              <div class="flex flex-col gap-6 md:flex-row md:items-start">
-                <div class="flex-shrink-0">
-                  <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-xl font-bold text-white">1</div>
+          <div class="mt-16 space-y-12">
+            <article class="pillar-card group">
+              <div class="grid gap-10 md:grid-cols-[auto,1fr] md:items-start">
+                <div class="flex flex-col items-start gap-5">
+                  <div class="pillar-number">1</div>
                 </div>
-                <div>
-                  <h3 class="text-2xl font-semibold text-brand-text">Consultoría Integral</h3>
-                  <p class="mt-3 text-brand-text-secondary">
-                    Diseñamos un roadmap transversal que alinea personas, procesos y gobierno corporativo. Diagnosticamos brechas, priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.
-                  </p>
-                  <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div class="rounded-lg bg-brand-primary/5 p-4">
+                <div class="space-y-8">
+                  <div class="max-w-2xl space-y-4">
+                    <h3 class="text-2xl font-semibold text-brand-text">Consultoría Integral</h3>
+                    <p class="text-base leading-relaxed text-brand-text-secondary">
+                      Diseñamos un roadmap transversal que alinea personas, procesos y gobierno corporativo. Diagnosticamos brechas, priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.
+                    </p>
+                  </div>
+                  <div class="pillar-subgrid">
+                    <div class="pillar-feature">
                       <p class="text-sm font-semibold text-brand-text">Modelos operativos integrados</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Orquestamos áreas clave con indicadores compartidos para acelerar decisiones.</p>
                     </div>
-                    <div class="rounded-lg bg-brand-primary/5 p-4">
+                    <div class="pillar-feature">
                       <p class="text-sm font-semibold text-brand-text">Gobierno y riesgos</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Definimos políticas, controles y tableros que brindan visibilidad ejecutiva.</p>
                     </div>
@@ -1053,66 +1223,61 @@
                 </div>
               </div>
             </article>
-            <article class="card border border-brand-primary/20">
-              <div class="flex flex-col gap-6 md:flex-row md:items-start">
-                <div class="flex-shrink-0">
-                  <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-xl font-bold text-white">2</div>
+            <article class="pillar-card group">
+              <div class="grid gap-10 md:grid-cols-[auto,1fr] md:items-start">
+                <div class="flex flex-col items-start gap-5">
+                  <div class="pillar-number">2</div>
                 </div>
-                <div class="flex-1">
-                  <div class="flex flex-col gap-4 md:flex-row md:gap-6">
-                    <div class="md:w-3/5">
+                <div class="space-y-10">
+                  <div class="grid gap-6 md:grid-cols-3 md:items-start">
+                    <div class="md:col-span-2 space-y-4">
                       <h3 class="text-2xl font-semibold text-brand-text">Transformación Digital</h3>
-                      <p class="mt-3 text-brand-text-secondary">
+                      <p class="text-base leading-relaxed text-brand-text-secondary">
                         Materializamos la visión estratégica en soluciones digitales escalables, asegurando adopción y evolución continua.
                       </p>
                     </div>
-                    <div class="md:w-2/5">
-                      <div class="rounded-lg bg-brand-primary/5 p-4">
-                        <p class="text-sm font-semibold text-brand-text">Gobierno del cambio digital</p>
-                        <p class="mt-1 text-sm text-brand-text-secondary">Acompañamos el despliegue con métricas de impacto y adopción por unidad de negocio.</p>
-                      </div>
+                    <div class="rounded-2xl border border-brand-primary/20 bg-brand-primary/5 p-5 shadow-inner shadow-brand-primary/5">
+                      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-brand-primary/70">Gobierno</p>
+                      <p class="mt-2 text-sm font-semibold text-brand-text">Gobierno del cambio digital</p>
+                      <p class="mt-1 text-sm text-brand-text-secondary">Acompañamos el despliegue con métricas de impacto y adopción por unidad de negocio.</p>
                     </div>
                   </div>
-                  <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div class="rounded-lg border border-brand-border p-4 transition-colors duration-300 hover:border-brand-primary" role="group">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">2.1</span>
-                      <p class="mt-2 text-sm font-semibold text-brand-text">Automatizaciones</p>
+                  <div class="pillar-subgrid md:grid-cols-2 xl:grid-cols-4">
+                    <div class="pillar-feature numbered" data-label="2.1">
+                      <p class="text-sm font-semibold text-brand-text">Automatizaciones</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Digitalizamos flujos críticos para eliminar tareas repetitivas y asegurar trazabilidad.</p>
                     </div>
-                    <div class="rounded-lg border border-brand-border p-4 transition-colors duration-300 hover:border-brand-primary" role="group">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">2.2</span>
-                      <p class="mt-2 text-sm font-semibold text-brand-text">Innovación Tecnológica</p>
+                    <div class="pillar-feature numbered" data-label="2.2">
+                      <p class="text-sm font-semibold text-brand-text">Innovación Tecnológica</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Introducimos plataformas y arquitecturas modernas alineadas a su estrategia de crecimiento.</p>
                     </div>
-                    <div class="rounded-lg border border-brand-border p-4 transition-colors duration-300 hover:border-brand-primary" role="group">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">2.3</span>
-                      <p class="mt-2 text-sm font-semibold text-brand-text">Herramientas Informáticas</p>
+                    <div class="pillar-feature numbered" data-label="2.3">
+                      <p class="text-sm font-semibold text-brand-text">Herramientas Informáticas</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Seleccionamos y configuramos soluciones que integran datos, equipos y procesos end-to-end.</p>
                     </div>
-                    <div class="rounded-lg border border-brand-border p-4 transition-colors duration-300 hover:border-brand-primary" role="group">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">2.4</span>
-                      <p class="mt-2 text-sm font-semibold text-brand-text">Herramientas de Inteligencia Artificial</p>
+                    <div class="pillar-feature numbered" data-label="2.4">
+                      <p class="text-sm font-semibold text-brand-text">Herramientas de Inteligencia Artificial</p>
                       <p class="mt-1 text-sm text-brand-text-secondary">Aplicamos IA para anticipar escenarios, optimizar operaciones y personalizar experiencias.</p>
                     </div>
                   </div>
                 </div>
               </div>
             </article>
-            <article class="card border border-brand-primary/20 bg-white/95 shadow-lg shadow-brand-primary/5">
-              <div class="flex flex-col gap-6 md:flex-row md:items-start">
-                <div class="flex-shrink-0">
-                  <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-xl font-bold text-white">3</div>
+            <article class="pillar-card group">
+              <div class="grid gap-10 md:grid-cols-[auto,1fr] md:items-start">
+                <div class="flex flex-col items-start gap-5">
+                  <div class="pillar-number">3</div>
                 </div>
-                <div class="flex-1">
+                <div class="space-y-10">
                   <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                    <div class="max-w-2xl">
+                    <div class="max-w-2xl space-y-4">
                       <h3 class="text-2xl font-semibold text-brand-text">Formaciones</h3>
-                      <p class="mt-3 text-brand-text-secondary">
+                      <p class="text-base leading-relaxed text-brand-text-secondary">
                         Construimos una academia corporativa evolutiva que asegura el upgrade de capacidades, acompaña el cambio cultural y consolida la adopción de la transformación.
                       </p>
                     </div>
-                    <div class="flex flex-col gap-2 text-sm text-brand-text-secondary md:items-end">
-                      <div class="flex items-center gap-3 rounded-full bg-brand-primary/10 px-4 py-2 font-medium text-brand-primary">
+                    <div class="flex flex-col gap-3 text-sm text-brand-text-secondary md:items-end">
+                      <div class="inline-flex items-center gap-3 rounded-full bg-brand-primary/10 px-4 py-2 font-medium text-brand-primary shadow-inner shadow-brand-primary/20">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                           <use href="assets/icons/sprite.svg#icon-ticker-check" />
                         </svg>
@@ -1121,49 +1286,18 @@
                       <span class="text-xs uppercase tracking-[0.35em] text-brand-primary/70">Roadmap 360°</span>
                     </div>
                   </div>
-                  <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <div class="rounded-lg border border-brand-border bg-brand-primary/5 p-5">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">3.1</span>
-                      <p class="mt-3 text-base font-semibold text-brand-text">Coaching ejecutivo</p>
+                  <div class="pillar-subgrid md:grid-cols-3">
+                    <div class="pillar-feature numbered" data-label="3.1">
+                      <p class="text-base font-semibold text-brand-text">Coaching ejecutivo</p>
                       <p class="mt-2 text-sm text-brand-text-secondary">Mentoría estratégica para directivos y sponsors del cambio con foco en liderazgo digital y gobierno.</p>
                     </div>
-                    <div class="rounded-lg border border-brand-border bg-brand-primary/5 p-5">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">3.2</span>
-                      <p class="mt-3 text-base font-semibold text-brand-text">Entrenamiento de equipos</p>
+                    <div class="pillar-feature numbered" data-label="3.2">
+                      <p class="text-base font-semibold text-brand-text">Entrenamiento de equipos</p>
                       <p class="mt-2 text-sm text-brand-text-secondary">Programas inmersivos que desarrollan nuevas formas de trabajo colaborativas y data-driven.</p>
                     </div>
-                    <div class="rounded-lg border border-brand-border bg-brand-primary/5 p-5">
-                      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary/80">3.3</span>
-                      <p class="mt-3 text-base font-semibold text-brand-text">Laboratorios de adopción</p>
+                    <div class="pillar-feature numbered" data-label="3.3">
+                      <p class="text-base font-semibold text-brand-text">Laboratorios de adopción</p>
                       <p class="mt-2 text-sm text-brand-text-secondary">Workshops con casos reales que aceleran el dominio de IA, automatización y herramientas innovadoras.</p>
-            <article class="card bg-gradient-to-r from-brand-primary/95 via-brand-primary to-brand-primary/85 text-white">
-              <div class="flex flex-col gap-6 md:flex-row md:items-start">
-                <div class="flex-shrink-0">
-                  <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-xl font-bold text-white">2.5</div>
-                </div>
-                <div class="flex-1">
-                  <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <h3 class="text-2xl font-semibold">Formaciones</h3>
-                      <p class="mt-3 text-white/80">
-                        Desarrollamos programas de upskilling y change management para acelerar la adopción de nuevas capacidades digitales en todos los niveles de la organización.
-                      </p>
-                    </div>
-                    <div class="flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-medium shadow-glow-primary">
-                      <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-                        <use href="assets/icons/sprite.svg#icon-ticker-check" />
-                      </svg>
-                      <span>Academia corporativa a medida</span>
-                    </div>
-                  </div>
-                  <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div class="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
-                      <p class="text-sm font-semibold">Coaching ejecutivo</p>
-                      <p class="mt-1 text-sm text-white/80">Fortalecemos liderazgo digital y toma de decisiones basadas en datos.</p>
-                    </div>
-                    <div class="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
-                      <p class="text-sm font-semibold">Entrenamiento de equipos</p>
-                      <p class="mt-1 text-sm text-white/80">Workshops prácticos en automatización, IA aplicada y herramientas colaborativas.</p>
                     </div>
                   </div>
                 </div>
