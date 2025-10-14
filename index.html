@@ -799,6 +799,12 @@
       </div>
     </div>
 
+    <noscript>
+      <style>
+        .preloader { display: none !important; }
+      </style>
+    </noscript>
+
     <header class="sticky top-0 z-40 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
       <div class="container mx-auto px-6 py-4 flex justify-between items-center">
         <a href="#" class="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
@@ -1149,7 +1155,7 @@
     <div id="modal-backdrop" class="modal-backdrop"></div>
     
     <script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
+    const runApp = () => {
       // --- AI Initialization ---
       let ai = null;
 
@@ -1225,12 +1231,19 @@
 
       // --- Preloader Logic ---
       const preloader = document.getElementById('preloader');
+      const hidePreloader = () => {
+        if (preloader && !preloader.classList.contains('hidden')) {
+          preloader.classList.add('hidden');
+        }
+      };
+
       if (preloader) {
         window.addEventListener('load', () => {
-          setTimeout(() => {
-            preloader.classList.add('hidden');
-          }, 500); // Small delay to ensure content is ready
+          setTimeout(hidePreloader, 500); // Small delay to ensure content is ready
         });
+
+        // Fallback in case the load event is delayed or blocked
+        setTimeout(hidePreloader, 2000);
       }
       
       // --- DATA ---
@@ -1739,7 +1752,14 @@
       }
       
       initTeleprompter();
-    });
+      hidePreloader();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runApp);
+    } else {
+      runApp();
+    }
     </script>
     <footer class="bg-brand-bg-secondary border-t border-hairline">
       <div class="container mx-auto px-6 py-8">
