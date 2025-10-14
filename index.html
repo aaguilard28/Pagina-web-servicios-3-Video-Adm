@@ -397,7 +397,7 @@
 
         /* ===== GX Executive Ticker ===== */
         #gx-ticker{
-          --gx-height: 54px;
+          --gx-height: 66px;
           --gx-gap: 28px;
           --gx-speed: 55s; /* ↑ mayor = más lento */
           --gx-bg: #FFFFFF;
@@ -435,11 +435,17 @@
           display: flex; align-items: center; gap: var(--gx-gap);
         }
         #gx-ticker .gx-ticker__item{
-          display: inline-flex; align-items: center; gap: 10px;
+          display: inline-flex; align-items: center; gap: 14px;
           white-space: nowrap; font-weight: 300; font-size: 15px; opacity: .92;
           color: #0A2540;
         }
-        #gx-ticker .ico{ width: 20px; height: 20px; flex: 0 0 20px; color: #0A2540; }
+        #gx-ticker .ico{
+          width: 40px;
+          height: 40px;
+          flex: 0 0 40px;
+          object-fit: contain;
+          color: #0A2540;
+        }
 
         /* Pausa al hover/focus SIN JS */
         #gx-ticker:hover .gx-ticker__track,
@@ -453,8 +459,9 @@
 
         /* Responsive & Motion */
         @media (max-width:768px){
-          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 34s; }
+          #gx-ticker{ --gx-height: 58px; --gx-gap: 22px; --gx-speed: 34s; }
           #gx-ticker .gx-ticker__item{ font-size: 13px; }
+          #gx-ticker .ico{ width: 32px; height: 32px; flex: 0 0 32px; }
         }
         @media (prefers-reduced-motion: reduce){
           #gx-ticker .gx-ticker__track{ animation: none !important; }
@@ -858,21 +865,21 @@
           <div class="gx-ticker__track">
             <!-- Secuencia A -->
             <ul class="gx-ticker__seq">
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-bars" /></svg><span>Decisiones con datos confiables</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-clock" /></svg><span>Cierres puntuales, sin sorpresas</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-shield" /></svg><span>Riesgos visibles desde el inicio</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-bolt" /></svg><span>Operación ágil y segura</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-target" /></svg><span>Ejecución estratégica en tiempo real</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-check" /></svg><span>Procesos claros y auditables</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/brain-globe.svg" alt="" role="presentation" loading="lazy" /><span>Decisiones con datos confiables</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/circuit-arrow.svg" alt="" role="presentation" loading="lazy" /><span>Cierres puntuales, sin sorpresas</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/cloud-circuit.svg" alt="" role="presentation" loading="lazy" /><span>Riesgos visibles desde el inicio</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/chip-gear.svg" alt="" role="presentation" loading="lazy" /><span>Operación ágil y segura</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/gear-circuit.svg" alt="" role="presentation" loading="lazy" /><span>Ejecución estratégica en tiempo real</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/brain-bulb.svg" alt="" role="presentation" loading="lazy" /><span>Procesos claros y auditables</span></li>
             </ul>
             <!-- Secuencia B (duplicada, idéntica a A) -->
             <ul class="gx-ticker__seq" aria-hidden="true">
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-bars" /></svg><span>Decisiones con datos confiables</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-clock" /></svg><span>Cierres puntuales, sin sorpresas</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-shield" /></svg><span>Riesgos visibles desde el inicio</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-bolt" /></svg><span>Operación ágil y segura</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-target" /></svg><span>Ejecución estratégica en tiempo real</span></li>
-              <li class="gx-ticker__item"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons/sprite.svg#icon-ticker-check" /></svg><span>Procesos claros y auditables</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/brain-globe.svg" alt="" role="presentation" loading="lazy" /><span>Decisiones con datos confiables</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/circuit-arrow.svg" alt="" role="presentation" loading="lazy" /><span>Cierres puntuales, sin sorpresas</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/cloud-circuit.svg" alt="" role="presentation" loading="lazy" /><span>Riesgos visibles desde el inicio</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/chip-gear.svg" alt="" role="presentation" loading="lazy" /><span>Operación ágil y segura</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/gear-circuit.svg" alt="" role="presentation" loading="lazy" /><span>Ejecución estratégica en tiempo real</span></li>
+              <li class="gx-ticker__item"><img class="ico" src="assets/icons/carousel/brain-bulb.svg" alt="" role="presentation" loading="lazy" /><span>Procesos claros y auditables</span></li>
             </ul>
           </div>
         </div>
