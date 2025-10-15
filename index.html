@@ -713,7 +713,7 @@
           vertical-align: bottom;
           border-right: 0.1em solid #FFFFFF;
           animation:
-            typing-ltr 8s steps(105) infinite,
+            typing-ltr 10s steps(105) infinite,
             blink-caret-ltr 0.75s step-end infinite;
         }
 
@@ -724,11 +724,17 @@
 
         /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
-          0%, 100% {
+          0% {
             width: 0;
           }
-          50%, 75% {
+          70% {
             width: 100%;
+          }
+          99.9% {
+            width: 100%;
+          }
+          100% {
+            width: 0;
           }
         }
 
