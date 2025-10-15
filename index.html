@@ -712,6 +712,7 @@
         }
 
         .typewriter-text span {
+          --characters: 105;
           display: inline-block;
           overflow: hidden;
           white-space: nowrap;
@@ -1546,6 +1547,62 @@
     
     <script type="module">
     const runApp = () => {
+      const updateTypewriterMetrics = () => {
+        const span = document.querySelector('.typewriter-text span');
+        if (!span) return;
+
+        const container = span.closest('.typewriter-container');
+        const textContent = span.textContent ? span.textContent.trim() : '';
+        if (textContent.length === 0) return;
+
+        span.style.setProperty('--characters', textContent.length);
+
+        const clone = span.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.style.visibility = 'hidden';
+        clone.style.position = 'absolute';
+        clone.style.left = '0';
+        clone.style.top = '0';
+        clone.style.whiteSpace = 'nowrap';
+        clone.style.maxWidth = 'none';
+        clone.style.borderRight = 'none';
+        clone.style.animation = 'none';
+        clone.style.width = 'auto';
+        clone.style.display = 'inline-block';
+
+        document.body.appendChild(clone);
+        const width = clone.getBoundingClientRect().width;
+        document.body.removeChild(clone);
+
+        const widthValue = `${width}px`;
+        span.style.setProperty('--typewriter-text-width', widthValue);
+        if (container) {
+          container.style.setProperty('--typewriter-text-width', widthValue);
+        }
+      };
+
+      let resizeFrameId = null;
+
+      const prepareTypewriter = () => {
+        updateTypewriterMetrics();
+
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => {
+            updateTypewriterMetrics();
+          });
+        } else {
+          window.addEventListener('load', updateTypewriterMetrics, { once: true });
+        }
+
+        window.addEventListener('resize', () => {
+          if (resizeFrameId) {
+            cancelAnimationFrame(resizeFrameId);
+          }
+          resizeFrameId = requestAnimationFrame(updateTypewriterMetrics);
+        });
+      };
+
+      prepareTypewriter();
       // --- AI Initialization ---
       let ai = null;
 
