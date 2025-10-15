@@ -684,89 +684,103 @@
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
         .typewriter-container {
+          position: relative;
           display: inline-flex;
           align-items: center;
-          background-color: #1C1C1E;
-          border-radius: 6px;
-          padding: 8px 24px;
-          box-shadow: 0 6px 24px rgba(0,0,0,.15);
+          justify-content: center;
+          padding: 14px 32px;
+          border-radius: 14px;
+          background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 60%),
+            linear-gradient(135deg, rgba(8, 47, 73, 0.96), rgba(15, 23, 42, 0.98));
+          border: 1px solid rgba(148, 163, 184, 0.25);
+          box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
+          min-width: calc(var(--typewriter-text-width, 24ch) + 64px);
           cursor: default;
-          transition: box-shadow 0.3s ease-in-out;
-          transform-origin: left center;
-          animation: container-track 10s ease-in-out infinite;
-          will-change: transform;
+          transition: box-shadow 400ms var(--ease-apple), transform 400ms var(--ease-apple);
+        }
+
+        .typewriter-container::before {
+          content: "";
+          position: absolute;
+          inset: 1px;
+          border-radius: inherit;
+          background: linear-gradient(135deg, rgba(148, 163, 184, 0.08), transparent 65%);
+          pointer-events: none;
         }
 
         .typewriter-container:hover {
-          box-shadow: 0 10px 30px rgba(0,0,0,.2);
-          animation-play-state: paused;
+          box-shadow: 0 22px 55px rgba(15, 23, 42, 0.32);
+          transform: translateY(-2px);
         }
 
         .typewriter-text {
-          color: #FFFFFF;
+          position: relative;
+          color: #e2e8f0;
           font-size: 1.25rem;
           font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
             "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
             "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
           line-height: 1.5;
+          letter-spacing: 0.01em;
         }
 
         .typewriter-text span {
-          --characters: 105;
+          position: relative;
           display: inline-block;
           overflow: hidden;
           white-space: nowrap;
           vertical-align: bottom;
-          border-right: 0.1em solid #FFFFFF;
+          padding-right: 0.35em;
           max-width: 0;
-          --characters: 105;
-          --typewriter-text-width: calc(var(--characters) * 1ch);
           will-change: max-width;
-          animation:
-            typing-ltr 10s steps(105) infinite,
-            blink-caret-ltr 0.75s step-end infinite;
+          animation: typing-ltr 11s var(--ease-apple) infinite;
         }
 
-        /* Pause animation on hover */
-        .typewriter-container:hover .typewriter-text span {
+        .typewriter-text span::after {
+          content: "";
+          position: absolute;
+          top: 8%;
+          right: 0;
+          width: 2px;
+          height: 84%;
+          border-radius: 999px;
+          background: linear-gradient(to bottom, rgba(148, 163, 184, 0.15), rgba(226, 232, 240, 0.9));
+          animation: blink-caret-ltr 1.15s steps(1, end) infinite;
+          transform: translateX(2px);
+        }
+
+        .typewriter-container:hover .typewriter-text span,
+        .typewriter-container:hover .typewriter-text span::after {
           animation-play-state: paused;
         }
 
-        /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
-          0%, 100% {
+          0% {
             max-width: 0;
           }
-          70%, 99% {
+          10% {
+            max-width: 0;
+          }
+          55% {
             max-width: var(--typewriter-text-width);
           }
-        }
-
-        @keyframes container-track {
-          0% {
-            transform: translateX(-12px) scaleX(0.96);
-          }
-          70%, 99% {
-            transform: translateX(4px) scaleX(1);
+          75% {
+            max-width: var(--typewriter-text-width);
           }
           100% {
-            transform: translateX(-12px) scaleX(0.96);
-          }
-          99.9% {
-            width: 100%;
-          }
-          100% {
-            width: 0;
+            max-width: 0;
           }
         }
 
-        /* Caret blinking */
         @keyframes blink-caret-ltr {
-          from, to {
-            border-color: transparent;
+          0%, 100% {
+            opacity: 0.15;
           }
-          50% {
-            border-color: #FFFFFF;
+          40% {
+            opacity: 1;
+          }
+          60% {
+            opacity: 0.4;
           }
         }
 
