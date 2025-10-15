@@ -713,8 +713,7 @@
           vertical-align: bottom;
           border-right: 0.1em solid #FFFFFF;
           animation:
-            typing-ltr 15s steps(105) infinite,
-            typing-ltr 8s steps(105) infinite,
+            typing-ltr 10s steps(105) infinite,
             blink-caret-ltr 0.75s step-end infinite;
         }
 
@@ -725,12 +724,17 @@
 
         /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
-          0%, 100% {
+          0% {
             width: 0;
           }
-          60%, 80% {
-          50%, 75% {
+          70% {
             width: 100%;
+          }
+          99.9% {
+            width: 100%;
+          }
+          100% {
+            width: 0;
           }
         }
 
@@ -1213,8 +1217,8 @@
               <span class="text-brand-primary">con la transformación digital</span>
             </h2>
 
-            <!-- Premium Description with Typewriter Effect -->
-            <div class="mt-10 flex justify-center">
+            <!-- === TYPEWRITER SECTION === -->
+            <div class="mt-8 flex justify-center">
               <div class="typewriter-container">
                 <p id="ai-subtitle" class="typewriter-text">
                   <span>Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.</span>
