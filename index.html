@@ -684,7 +684,9 @@
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
         .typewriter-container {
-          display: inline-block;
+          --typewriter-duration: 13s;
+          display: inline-flex;
+          align-items: center;
           background-color: #1C1C1E;
           border-radius: 6px;
           padding: 8px 24px;
@@ -707,14 +709,16 @@
         }
 
         .typewriter-text span {
+          --characters: 105;
           display: inline-block;
           overflow: hidden;
           white-space: nowrap;
           vertical-align: bottom;
           border-right: 0.1em solid #FFFFFF;
+          max-width: 0;
+          will-change: max-width;
           animation:
-            typing-ltr 15s steps(105) infinite,
-            typing-ltr 8s steps(105) infinite,
+            typing-ltr var(--typewriter-duration) steps(var(--characters)) infinite,
             blink-caret-ltr 0.75s step-end infinite;
         }
 
@@ -726,11 +730,13 @@
         /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
           0%, 100% {
-            width: 0;
+            max-width: 0;
           }
-          60%, 80% {
-          50%, 75% {
-            width: 100%;
+          62% {
+            max-width: var(--typewriter-text-width, 0px);
+          }
+          85% {
+            max-width: var(--typewriter-text-width, 0px);
           }
         }
 
@@ -1213,8 +1219,8 @@
               <span class="text-brand-primary">con la transformación digital</span>
             </h2>
 
-            <!-- Premium Description with Typewriter Effect -->
-            <div class="mt-10 flex justify-center">
+            <!-- === TYPEWRITER SECTION === -->
+            <div class="mt-8 flex justify-center">
               <div class="typewriter-container">
                 <p id="ai-subtitle" class="typewriter-text">
                   <span>Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.</span>
@@ -1521,6 +1527,62 @@
     
     <script type="module">
     const runApp = () => {
+      const updateTypewriterMetrics = () => {
+        const span = document.querySelector('.typewriter-text span');
+        if (!span) return;
+
+        const container = span.closest('.typewriter-container');
+        const textContent = span.textContent ? span.textContent.trim() : '';
+        if (textContent.length === 0) return;
+
+        span.style.setProperty('--characters', textContent.length);
+
+        const clone = span.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.style.visibility = 'hidden';
+        clone.style.position = 'absolute';
+        clone.style.left = '0';
+        clone.style.top = '0';
+        clone.style.whiteSpace = 'nowrap';
+        clone.style.maxWidth = 'none';
+        clone.style.borderRight = 'none';
+        clone.style.animation = 'none';
+        clone.style.width = 'auto';
+        clone.style.display = 'inline-block';
+
+        document.body.appendChild(clone);
+        const width = clone.getBoundingClientRect().width;
+        document.body.removeChild(clone);
+
+        const widthValue = `${width}px`;
+        span.style.setProperty('--typewriter-text-width', widthValue);
+        if (container) {
+          container.style.setProperty('--typewriter-text-width', widthValue);
+        }
+      };
+
+      let resizeFrameId = null;
+
+      const prepareTypewriter = () => {
+        updateTypewriterMetrics();
+
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => {
+            updateTypewriterMetrics();
+          });
+        } else {
+          window.addEventListener('load', updateTypewriterMetrics, { once: true });
+        }
+
+        window.addEventListener('resize', () => {
+          if (resizeFrameId) {
+            cancelAnimationFrame(resizeFrameId);
+          }
+          resizeFrameId = requestAnimationFrame(updateTypewriterMetrics);
+        });
+      };
+
+      prepareTypewriter();
       // --- AI Initialization ---
       let ai = null;
 
