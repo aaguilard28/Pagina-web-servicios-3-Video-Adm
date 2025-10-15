@@ -684,17 +684,22 @@
         
         /* ====== TYPEWRITER EFFECT (ENHANCED & MINIMALIST) ====== */
         .typewriter-container {
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
           background-color: #1C1C1E;
           border-radius: 6px;
           padding: 8px 24px;
           box-shadow: 0 6px 24px rgba(0,0,0,.15);
           cursor: default;
           transition: box-shadow 0.3s ease-in-out;
+          transform-origin: left center;
+          animation: container-track 10s ease-in-out infinite;
+          will-change: transform;
         }
 
         .typewriter-container:hover {
           box-shadow: 0 10px 30px rgba(0,0,0,.2);
+          animation-play-state: paused;
         }
 
         .typewriter-text {
@@ -712,6 +717,10 @@
           white-space: nowrap;
           vertical-align: bottom;
           border-right: 0.1em solid #FFFFFF;
+          max-width: 0;
+          --characters: 105;
+          --typewriter-text-width: calc(var(--characters) * 1ch);
+          will-change: max-width;
           animation:
             typing-ltr 10s steps(105) infinite,
             blink-caret-ltr 0.75s step-end infinite;
@@ -724,11 +733,23 @@
 
         /* Typing animation (LTR direction) */
         @keyframes typing-ltr {
-          0% {
-            width: 0;
+          0%, 100% {
+            max-width: 0;
           }
-          70% {
-            width: 100%;
+          70%, 99% {
+            max-width: var(--typewriter-text-width);
+          }
+        }
+
+        @keyframes container-track {
+          0% {
+            transform: translateX(-12px) scaleX(0.96);
+          }
+          70%, 99% {
+            transform: translateX(4px) scaleX(1);
+          }
+          100% {
+            transform: translateX(-12px) scaleX(0.96);
           }
           99.9% {
             width: 100%;
